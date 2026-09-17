@@ -1,4 +1,4 @@
-# MineVSweeper
+# MineVSweeper (Recontra vibecodeado.)
 
 Buscaminas en una pestaña del editor de VS Code / Cursor, para jugar mientras el agente modifica código.
 
