@@ -8,10 +8,49 @@
   const vscode = typeof acquireVsCodeApi === "function" ? acquireVsCodeApi() : null;
 
   const boardEl = document.getElementById("board");
+  const boardWrapEl = document.querySelector(".board-wrap");
   const minesEl = document.getElementById("mines");
   const timerEl = document.getElementById("timer");
   const resetEl = document.getElementById("reset");
   const difficultyEl = document.getElementById("difficulty");
+
+  const MIN_CELL = 14;
+  const MAX_CELL = 36;
+
+  function updateLayout() {
+    if (!boardWrapEl || cols < 1 || rows < 1) {
+      return;
+    }
+    const rect = boardWrapEl.getBoundingClientRect();
+    const styles = getComputedStyle(boardWrapEl);
+    const padX = parseFloat(styles.paddingLeft) + parseFloat(styles.paddingRight);
+    const padY = parseFloat(styles.paddingTop) + parseFloat(styles.paddingBottom);
+    const innerW = rect.width - padX;
+    const innerH = rect.height - padY;
+    if (innerW <= 0 || innerH <= 0) {
+      return;
+    }
+    const rootStyles = getComputedStyle(document.documentElement);
+    const gap =
+      parseFloat(rootStyles.getPropertyValue("--cell-gap").trim()) ||
+      3;
+    const totalGapX = gap * Math.max(0, cols - 1);
+    const totalGapY = gap * Math.max(0, rows - 1);
+    const byW = (innerW - totalGapX) / cols;
+    const byH = (innerH - totalGapY) / rows;
+    const size = Math.max(MIN_CELL, Math.min(MAX_CELL, Math.floor(Math.min(byW, byH) * 10) / 10));
+    document.documentElement.style.setProperty("--cell-size", `${size}px`);
+    document.documentElement.style.setProperty(
+      "--cell-font",
+      `${Math.max(10, Math.min(17, Math.round(size * 0.52)))}px`
+    );
+  }
+
+  if (typeof ResizeObserver !== "undefined" && boardWrapEl) {
+    const ro = new ResizeObserver(() => updateLayout());
+    ro.observe(boardWrapEl);
+  }
+  window.addEventListener("resize", updateLayout);
 
   let rows = 9;
   let cols = 9;
@@ -113,6 +152,10 @@
 
     if (cell.revealed) {
       btn.classList.add("revealed");
+      if (cell.revealAnim) {
+        btn.classList.add("reveal-animate");
+        cell.revealAnim = false;
+      }
       if (cell.mine) {
         btn.classList.add("mine");
         if (cell.exploded) {
@@ -163,6 +206,7 @@
       startTimer();
     }
     cell.revealed = true;
+    cell.revealAnim = true;
     if (cell.mine) {
       cell.exploded = true;
       lose();
@@ -248,8 +292,10 @@
       flagged: false,
       exploded: false,
       adjacent: 0,
+      revealAnim: false,
     }));
-    boardEl.style.gridTemplateColumns = `repeat(${cols}, var(--cell))`;
+    boardEl.style.gridTemplateColumns = `repeat(${cols}, var(--cell-size))`;
+    boardEl.style.gridTemplateRows = `repeat(${rows}, var(--cell-size))`;
     boardEl.replaceChildren();
     for (let i = 0; i < cells.length; i += 1) {
       const btn = document.createElement("button");
@@ -276,18 +322,25 @@
         }
       });
       btn.addEventListener("mousedown", () => {
+        if (!over && !cells[i].revealed) {
+          btn.classList.add("pressed");
+        }
         if (!over) {
           setFace("😮");
         }
       });
+      const releasePress = () => btn.classList.remove("pressed");
       btn.addEventListener("mouseup", () => {
+        releasePress();
         if (!over) {
           setFace("🙂");
         }
       });
+      btn.addEventListener("mouseleave", releasePress);
       boardEl.appendChild(btn);
     }
     renderAll();
+    requestAnimationFrame(updateLayout);
   }
 
   resetEl.addEventListener("click", () => newGame());
