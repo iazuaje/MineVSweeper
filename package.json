@@ -1,0 +1,67 @@
+{
+  "name": "minevsweeper",
+  "displayName": "MineVSweeper",
+  "description": "Buscaminas en una pestaña del editor para jugar mientras el agente modifica código.",
+  "version": "0.1.0",
+  "publisher": "iazuaje",
+  "license": "MIT",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iazuaje/MineVSweeper.git"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "minesweeper",
+    "buscaminas",
+    "game",
+    "webview"
+  ],
+  "activationEvents": [
+    "onCommand:minevsweeper.open"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "minevsweeper.open",
+        "title": "Open Game",
+        "category": "MineVSweeper"
+      }
+    ],
+    "configuration": {
+      "title": "MineVSweeper",
+      "properties": {
+        "minevsweeper.difficulty": {
+          "type": "string",
+          "enum": [
+            "beginner",
+            "intermediate",
+            "expert"
+          ],
+          "default": "beginner",
+          "description": "Dificultad al abrir una partida nueva."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "package": "vsce package --no-dependencies",
+    "publish:ovsx": "ovsx publish --no-dependencies"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^3.2.1",
+    "ovsx": "^0.10.1",
+    "typescript": "^5.4.5"
+  }
+}
