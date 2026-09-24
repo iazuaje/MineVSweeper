@@ -45,15 +45,6 @@ Cada comando compila TypeScript y genera el VSIX. Conviene commitear el cambio d
 
 Alternativa estándar de npm (opcional): `npm version patch --no-git-tag-version` y después `npm run package` sin argumentos.
 
-## Publicar más adelante
-
-El juego en `media/` no depende de VS Code salvo el `acquireVsCodeApi` opcional. El host está en `src/`.
-
-1. Creá un publisher en [Visual Studio Marketplace](https://marketplace.visualstudio.com/manage) o usá Open VSX.
-2. Ajustá `publisher` y `repository` en `package.json`.
-3. Agregá un icono PNG 128×128 y referencialo con `"icon": "media/icon.png"`.
-4. `npx vsce login <publisher>` y `npm run package`, o `npm run publish:ovsx`.
-
 ## Controles
 
 - Clic: revelar (el primer clic nunca es mina)
