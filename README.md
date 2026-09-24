@@ -58,5 +58,5 @@ El juego en `media/` no depende de VS Code salvo el `acquireVsCodeApi` opcional.
 
 - Clic: revelar (el primer clic nunca es mina)
 - Clic derecho: bandera
-- Clic medio o doble clic sobre un número: acordeón
+- Clic izquierdo sobre un número revelado: acordeón
 - Carita: nueva partida

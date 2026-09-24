@@ -302,8 +302,9 @@
       btn.type = "button";
       btn.className = "cell";
       btn.setAttribute("role", "gridcell");
-      btn.addEventListener("click", (event) => {
-        if (event.detail === 2) {
+      btn.addEventListener("click", () => {
+        const cell = cells[i];
+        if (cell.revealed && cell.adjacent > 0 && !cell.mine) {
           chord(i);
         } else {
           reveal(i);
@@ -314,20 +315,16 @@
         event.preventDefault();
         toggleFlag(i);
       });
-      btn.addEventListener("auxclick", (event) => {
-        if (event.button === 1) {
-          event.preventDefault();
-          chord(i);
-          renderAll();
+      btn.addEventListener("mousedown", (event) => {
+        if (event.button !== 0 || over) {
+          return;
         }
-      });
-      btn.addEventListener("mousedown", () => {
-        if (!over && !cells[i].revealed) {
+        const cell = cells[i];
+        // Pressed en ocultas y en números revelados (feedback del acordeón)
+        if (!cell.revealed || (cell.adjacent > 0 && !cell.mine)) {
           btn.classList.add("pressed");
         }
-        if (!over) {
-          setFace("😮");
-        }
+        setFace("😮");
       });
       const releasePress = () => btn.classList.remove("pressed");
       btn.addEventListener("mouseup", () => {

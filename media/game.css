@@ -193,7 +193,7 @@ body {
     inset calc(-1 * var(--bevel-depth) - 1px) calc(-1 * var(--bevel-depth) - 1px) 0 var(--bevel-highlight);
 }
 
-.cell:not(.revealed).pressed {
+.cell.pressed {
   transform: scale(0.94);
   background: var(--surface-pressed);
   box-shadow:
@@ -209,6 +209,26 @@ body {
   box-shadow:
     inset 1px 1px 0 color-mix(in srgb, var(--bevel-shadow) 65%, transparent),
     inset -1px -1px 0 color-mix(in srgb, var(--bevel-highlight) 65%, transparent);
+}
+
+.cell.revealed.n1,
+.cell.revealed.n2,
+.cell.revealed.n3,
+.cell.revealed.n4,
+.cell.revealed.n5,
+.cell.revealed.n6,
+.cell.revealed.n7,
+.cell.revealed.n8 {
+  cursor: pointer;
+}
+
+.cell.revealed.pressed {
+  transform: scale(0.94);
+  background: color-mix(in srgb, var(--vscode-foreground) 8%, var(--surface-revealed));
+  box-shadow:
+    inset calc(var(--bevel-depth) + 2px) calc(var(--bevel-depth) + 2px) 0
+      color-mix(in srgb, var(--vscode-foreground) 30%, var(--vscode-editor-background)),
+    inset calc(-1 * var(--bevel-depth)) calc(-1 * var(--bevel-depth)) 0 var(--bevel-highlight);
 }
 
 .cell.mine {
@@ -232,7 +252,7 @@ body {
   transition: transform var(--motion-fast) var(--ease-spring);
 }
 
-.cell:not(.revealed).pressed.flagged::after,
+.cell.pressed.flagged::after,
 .cell:not(.revealed):hover.flagged::after {
   transform: scale(1.05);
 }
